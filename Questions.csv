@@ -1,0 +1,10 @@
+﻿Category,Question
+social_isolation_loneliness,Does or did the patient experience feelings of loneliness?
+social_isolation_no_social_network,Does or did the patient lack a social network?
+social_isolation_no_emotional_support,Does or did the patient lack emotional support?
+social_isolation_no_instrumental_support,Does or did the patient lack access to instrumental support?
+social_isolation_general,"Does or did the patient have social isolation; however, there is not enough information to classify the type of social isolation as specifically lack of instrumental support, lack of emotional support, lack of social network, or loneliness? "
+social_support_social_network,Does or did the patient have a social network?
+social_support_emotional_support,Does or did the patient have adequate emotional support?
+social_support_instrumental_support,Does or did the patient have access to instrumental support?
+social_support_general,"Does or did the patient have social support; however, there is not enough information to classify the type of social support as specifically instrumental support, emotional support, or social network?"

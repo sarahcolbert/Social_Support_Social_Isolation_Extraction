@@ -1,0 +1,181 @@
+#removed 0110
+# Physical therapy
+# Occupational therapy
+# Speech therapy
+# Rehabilitation therapy
+# Exercise therapy
+# Recreational therapist
+# Physical therapist
+# Occupational therapist
+# Speech therapist
+# Rehabilitation therapist
+# Exercise therapist
+# Recreational therapist
+# No therapy
+# Milieu therapy
+# Therapy programming
+# [] therapy
+# Interest in attending therapy
+# Interest in starting therapy
+# Interested in therapy
+# Has not been in therapy
+# Suicide: medications and therapy
+# Short term therapy
+# Long term therapy
+# Mitigate risk for suicide: therapy
+# Consider therapy
+# Referrals for therapy
+# Referral for therapy
+# Therapy referral
+# Consider individual therapy
+# Medical therapy
+# Medication therapy
+# Pharmacologic therapy
+# Bridging therapy
+# Appropriate therapy
+# Chemo therapy
+# Starting therapy
+# Barriers to therapy
+# Not receiving therapy
+# Nutrition therapy
+# Replacement therapy
+# Alternative therapy
+# Not receiving weekly therapy
+# Not receiving therapy
+# Rachy therapy
+# Does not want to participate in individual therapy
+# Does not want to participate in therapy
+# Does not want to go to therapy
+# Does not go to therapy
+# Will not go to therapy
+# Including individual therapy
+# Not in therapy
+# Hormonal therapy
+# Home based therapy
+# Therapy services
+<social_isolation<social_support
+Does not trust
+Doesn’t trust
+Can’t trust
+Cannot trust
+No trust
+Trust my body
+Trust my intuition
+Trust my education
+Trust myself
+Trust my self
+Trust his body
+Trust her body
+Trust his intuition
+Trust her intuition
+Trust herself
+Trust himself
+Trust her self
+Trust him self
+Trust her treatment 
+Trust his treatment
+Trust his team
+Trust her team
+Trust my body
+Trust his body
+Trust her body
+Trust his provider
+Trust her provider
+Trust his doctor
+Trust her doctor
+Trust his nurse
+Trust her nurse
+Can talk to provider
+Can talk to doctor
+Can talk to writer
+Can talk to nurse
+Can talk to staff
+Can talk to billing
+Can talk to front desk
+Can talk to hospital
+Can talk to team
+Can talk to attending
+Can talk to social work
+Can talk to SW
+Can talk to case worker
+Can talk to REAP
+Can talk to boss
+No family history
+#removed 0110
+# psychotherapy codes do not apply
+# psychotherapy and medication
+# psychotherapy for any patient at risk
+# do not include psychotherapy session content
+# igm therapy
+# likely receive individual therapy
+# will receive individual therapy
+# Mitigate risk for suicide: therapy, psychotherapy
+
+#added 0327
+not married
+
+#added 050223
+inability to go to shelter
+paperwork for supportive housing
+applied for supportive housing
+applying for supportive housing
+wants supportive housing
+needs supportive housing
+assessed for supportive housing
+evaluated for supportive housing
+asking for supportive housing
+would benefit from supportive housing
+lost supportive housing
+qualify for supportive housing
+needs home care
+Needing home care
+wants home care
+asking for home care
+assessed for home care
+benefit from home care
+qualify for home care
+works as home health 
+Needs HHA
+Needs home health aid
+Needs home health aide
+In need of HHA
+In need of home health
+Desires hha
+works as HHA
+[] social support
+[]social support
+[-]social support
+[-] social support
+Increasing his social support
+Increasing her social support
+[]close relationships
+[] close relationships
+No family hx
+No family available
+
+#ADDED 050723
+Parents divorced
+Parents are divorced
+Parents got divorced
+Parents getting divorced
+Parents are getting divorced
+They are getting divorced
+Partner status
+Inability to make friends
+Desire to have friends
+Desires to have friends
+#removed 0110
+# Supportive therapy provided
+# Provided supportive therapy
+# Will benefit from supportive therapy
+Has been HHA
+Has been home health aid
+Has been home health aide
+Has worked as home health
+Any social support
+[] Social isolation
+Social isolation?
+#for cornell
+Current Living Conditions/Support Network
+
+
