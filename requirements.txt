@@ -1,0 +1,16 @@
+adapter-transformers==3.2.1.post0
+adapters==0.1.2
+bratiaa==0.1.4
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.1/en_core_web_sm-3.4.1-py3-none-any.whl
+huggingface-hub==0.13.4
+nltk==3.6.5
+numpy==1.23.0
+pandas==1.2.5
+scikit-learn==0.24.2
+scipy==1.10.1
+sentencepiece==0.1.99
+sklearn==0.0
+spacy==3.4.4
+tensorflow==2.13.0
+tokenizers==0.13.3
+torch==1.13.1
