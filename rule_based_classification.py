@@ -7,19 +7,17 @@ the available lexicons.
 
 import re
 import spacy
-from spacy.matcher import PhraseMatcher
 import numpy as np
 import pandas as pd
 from lexicons.rdl import LoadLexicons
+from spacy.matcher import PhraseMatcher
 from load_documents import LoadDocuments
-from configuration_file import Configuration
 
 
 class RuleBasedClassification:
     def __init__(self):
         """"This function will load configuration files, spacy, lexicons
         and create matchers for each lexicon category """
-        self.conf = Configuration()
         # loading spacy
         self.nlp = spacy.load("en_core_web_sm")
         self.load_docs = LoadDocuments()
@@ -28,12 +26,6 @@ class RuleBasedClassification:
             self.si_general, self.si_probable, self.su_social_network, self.su_emotional_support, \
             self.su_instrumental_support, self.su_general, self.su_probable = LoadLexicons().lexicons()
         self.exclusion_terms = LoadLexicons().get_exclusion_terms()
-        #print(len(self.si_loneliness) + len(self.si_no_social_network) + len(self.si_no_emotional_support) +
-        #      len(self.si_no_instrumental_support) + len(self.si_general) + len(self.si_probable) +
-        #      len(self.su_social_network) + len(self.su_emotional_support) + len(self.su_instrumental_support) +
-        #      len(self.su_general) + len(self.su_probable))
-        # print(len(self.exclusion_terms))
-
         # converting all lexicons into matcher
         self.matcher = PhraseMatcher(self.nlp.vocab, attr="LOWER")
         self.create_matchers()
@@ -157,23 +149,7 @@ class RuleBasedClassification:
         """This is the main function which controls the entity identification, providing fine grain categories, and
         identifying coarse grain document categories.
         """
-        # loading entity and document annotations here.
-        #isolation_notes = self.load_docs.get_annotations('./Psych_notes/isolation_notes_braja/',
-        #                                                 './Psych_notes/braja_veer_annotation_isolation.csv')
-        #print('loaded isolation notes')
-        #support_notes = self.load_docs.get_annotations('./Psych_notes/support_notes_veer/',
-        #                                               './Psych_notes/braja_veer_annotation_support.csv')
-        #annotated_data = support_notes
-        # annotated_data = isolation_notes.update(support_notes)
-        # annotated_data = ld.get_annotations('./Psych_notes/support_notes_veer/',
-        #                                    './Psych_notes/braja_veer_annotation_support.csv')
-        #print(type(annotated_data))
-        #print(annotated_data.keys())
-        #annotated_data = ld.get_annotations('./Psych_notes/support_notes_veer/',
-        #                                    './Psych_notes/braja_veer_annotation_support.csv')
-        #annotated_data = self.load_docs.get_annotations('/Users/brajapatra/PycharmProjects/SDoH/PICORI/SI_notes/braja_notes 2/',
-        #                                                '/Users/brajapatra/PycharmProjects/SDoH/PICORI/SI_notes/doc_annotation.csv')
-
+        # loading entity and document annotations here from BRAT annotations.
         annotated_data = self.load_docs.get_annotations(
             './Psych_notes/annotation_sisu_psych_notes_final/support_notes/',
             './Psych_notes/annotation_sisu_psych_notes_final/social_support_files.csv')
@@ -199,7 +175,7 @@ class RuleBasedClassification:
         entity_texts = self.load_docs.get_entities(annotated_data)
         entity_texts['derived_entity_text'] = e_texts
         self.load_docs.calculate_iaa(annotation_categories_df, result_categories_df)
-        #annotation_categories_df.join(result_categories_df, entity_texts, 'inner').drop(result_categories_df.file_name)
+        # annotation_categories_df.join(result_categories_df, entity_texts, 'inner').drop(result_categories_df.file_name)
         merged_results = pd.concat([annotation_categories_df, result_categories_df, entity_texts], axis=1)
         merged_results.to_csv('annotation_vs_system_output.csv')
 

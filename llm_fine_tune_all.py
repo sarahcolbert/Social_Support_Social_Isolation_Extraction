@@ -1,15 +1,16 @@
-# Created by brajapatra at 4/26/23, 1:06 PM
+# -*- coding: utf-8 -*-
+"""This code fine-tune all the models at a time."""
 
-"""
-This code fine-tune all the models at a time.
-"""
-import pandas as pd
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-from glob import glob
+
 import gc
-from transformers.adapters import IA3Config
-# from adapters import IA3Config
+import pandas as pd
+from glob import glob
 from datasets import load_dataset
+from transformers import Seq2SeqTrainer
+from transformers.adapters import IA3Config
+from transformers import DataCollatorForSeq2Seq
+from transformers import Seq2SeqTrainingArguments
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 
 class LLMFineTuning:
@@ -18,6 +19,10 @@ class LLMFineTuning:
         self.epochs = None
 
     def read_tuning_data(self, fine_tuning_folder):
+        """
+        :param fine_tuning_folder:
+        :return:
+        """
         temp = []
         for file_name in glob(fine_tuning_folder):
             print(file_name)
@@ -28,6 +33,12 @@ class LLMFineTuning:
         temp.to_csv('temp.csv', index=False)
 
     def training(self, category):
+        """
+        This code decides the saving address and loads the examples for fine-tuning.
+        This also specifies number of epochs for each fine-tuned categories.
+        Finally, it fine-tune the model.
+        :param category: (str) fine-grained category name
+        """
         if category == 'social_isolation_loneliness':
             self.saving_address = r"tuned_model/si_l/flan-t5-xl"
             self.read_tuning_data('./fine_tuning/SI_L.csv')
@@ -122,15 +133,13 @@ class LLMFineTuning:
             batched=True,
             remove_columns=dataset["train"].column_names,
         )
-        from transformers import DataCollatorForSeq2Seq
+
         data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
         batch = data_collator([tokenized_datasets["train"][i] for i in range(1, 5)])
         batch.keys()
 
         # print(batch["labels"])
-
-        from transformers import Seq2SeqTrainingArguments
 
         epochs = self.epochs
         args = Seq2SeqTrainingArguments(
@@ -147,7 +156,6 @@ class LLMFineTuning:
             warmup_steps=(len(split_datasets["train"]) * epochs) / 10,
             max_steps=len(split_datasets["train"]) * epochs
         )
-        from transformers import Seq2SeqTrainer
 
         trainer = Seq2SeqTrainer(
             model,
@@ -164,23 +172,19 @@ class LLMFineTuning:
         shutil.rmtree('google/flan-t5-xl')
 
     def process(self):
-        ## removed emotional support categories
-        # 'social_isolation_loneliness',
-        # 'social_isolation_no_social_network', 
-        for category in ['social_support_social_network',
-                         'social_support_instrumental_support', 'social_isolation_no_instrumental_support',
-                         'social_isolation_general', 'social_support_general']:
-            # if category == 'social_isolation_no_emotional_support' or category == 'social_support_emotional_support':
-            #     continue
+        # removed emotional support categories
+        from load_documents import LoadDocuments
+        load_docs = LoadDocuments()
+        for category in load_docs.si_classes + load_docs.su_classes:
+            if category == 'social_isolation_no_emotional_support' or \
+                    category == 'social_support_emotional_support':
+                continue
             self.training(category)
             gc.collect()
 
 
 def main():
-    #print('I am here')
     LLMFineTuning().process()
-    # from llm_sentence_classification import LLMSentenceClassification
-    # LLMSentenceClassification().process()
 
 
 if __name__ == '__main__':

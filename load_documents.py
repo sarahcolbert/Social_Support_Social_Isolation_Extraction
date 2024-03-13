@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-"""This will load the notes, corresponding entity and note level annotations in a dictionary. It also provides some
-counts of entities and calculates the inter-annotator-agreement at note level."""
+"""This code loads clinical notes with entity level annotation from BRAT annotated files. The corresponding
+note/document level annotations are loaded from a csv file.
+It also provides some counts of entities at document level, calculates the inter-annotator-agreement, and
+ helps in evaluating the results."""
 
 
 import os
+import spacy
 import numpy as np
 import pandas as pd
-from configuration_file import Configuration
 from sklearn.metrics import cohen_kappa_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -18,7 +20,6 @@ class LoadDocuments:
 
     def __init__(self):
         """This function initializes the configuration and entity categories."""
-        # self.conf = Configuration()
         self.si_classes = ['social_isolation_loneliness', 'social_isolation_no_social_network',
                            'social_isolation_no_emotional_support', 'social_isolation_no_instrumental_support',
                            'social_isolation_general']
@@ -31,6 +32,7 @@ class LoadDocuments:
                                   'social_isolation_no_social_network', 'social_isolation_no_emotional_support',
                                   'social_isolation_no_instrumental_support', 'social_isolation_general',
                                   'social_isolation_probable']
+        # templates found in Mount Sinai (MS) Data
         self.template_regex = '|'.join([r'(social support\?)',
                                         r'(social isolation or lack of social support network\?)',
                                         r'(social isolation or lack of social service\?)',
@@ -43,14 +45,8 @@ class LoadDocuments:
                                         r'(patient and family educated about recommendations including)',
                                         r'(increased social support\?)'])
 
-        '''self.template_regex = '|'.join([r'(lacks social support\W{1,5}(:?yes|no))',
-                                        r'(social isolation or lack of social support network\W{1,5}(yes|no))',
-                                        r'(social isolation or lack of social service\W{1,5}(yes|no))',
-                                        r'(social isolation\W{1,5}(yes|no))',
-                                        r'(single\/divorced\/widowed)',
-                                        r'(homeless\?)'])'''
-
     def repl(self, m):
+        """Replace the multiple # from the text that are found mainly in MS data"""
         return '#' * len(m.group())
 
     def convert_doc_categories(self, doc_annotation):
@@ -161,7 +157,6 @@ class LoadDocuments:
                 get_annotations for more details.
         :return: categories_sent_data (pd.DataFrame): dataframe of the sentences with fine-grained categories.
         """
-        import spacy
         nlp = spacy.load("en_core_web_sm")
         final_out = []
         for file_name in all_data:
@@ -302,7 +297,8 @@ class LoadDocuments:
         # print('Change evaluation after sometime.')
         # for entity_category in self.entity_categories: # this will remove probable category.
         for entity_category in self.su_classes + self.si_classes:
-            # # TODO: Remove this later.
+            # While evaluating LLM results we did not include the emotional support categories (both SI and SS)
+            # TODO: comment out this while running rule-based algorithm.
             # if entity_category == 'social_isolation_no_emotional_support' \
             #         or entity_category == 'social_support_emotional_support':
             #     continue
@@ -389,51 +385,26 @@ class LoadDocuments:
 
 
 def main():
-    ld = LoadDocuments()
-    #all_data = ld.get_annotations('./Psych_notes/isolation_notes_braja/',
-    #                              './Psych_notes/braja_veer_annotation_isolation.csv')
-    #all_data = ld.get_annotations('./Psych_notes/MSData/ann_files/',
-    #                              './Psych_notes/MSData/coarse_annotation_category.csv')
-    annotated_data = ld.get_annotations(
+    load_docs = LoadDocuments()
+    # Loading the data from BRAT annotation.
+    annotated_data = load_docs.get_annotations(
         './Psych_notes/annotation_sisu_psych_notes_final/support_notes/',
         './Psych_notes/annotation_sisu_psych_notes_final/social_support_files.csv')
-    annotated_data.update(ld.get_annotations(
+    annotated_data.update(load_docs.get_annotations(
         './Psych_notes/annotation_sisu_psych_notes_final/isolation_notes/',
         './Psych_notes/annotation_sisu_psych_notes_final/social_isolation_files.csv'))
-    ld.get_counts(annotated_data)
-    import sys
-    sys.exit(1)
-    class_annotation_df = ld.convert_entity_to_document_category(annotated_data)
-    #ld.get_entities_info(all_data)
+    load_docs.get_counts(annotated_data)
+    # For verifying entity categories.
+    # ld.get_entities_info(annotated_data)
 
-    '''all_data = ld.get_annotations('./Psych_notes/isolation_notes_mohit/', './Psych_notes/mohit_annotation.csv')
-    ld.get_counts(all_data)
-    class_annotation_df1 = ld.convert_entity_to_document_category(all_data)
-    ld.get_entities_info(all_data)
-    ld.calculate_iaa(class_annotation_df, class_annotation_df1)'''
-
-    '''annotations = pd.read_excel('./Psych_notes/social_isolation_files.xlsx')
-    annotations['Mohit'] = annotations['Mohit'].str.lower()
-    right_count = 0
-    wrong_count = 0
-    for index, row in annotations.iterrows():
-        m = row['Mohit']
-        bv = row['Braja/Veer']
-
-        if not m == bv:
-            wrong_count += 1
-            print(row['file_name'], bv, m)
-        else:
-            right_count += 1
-    print(right_count, wrong_count)
-
-    ann1 = annotations['Braja/Veer'].tolist()
-    ann2 = annotations['Mohit'].tolist()
-    from sklearn.metrics import precision_recall_fscore_support
-    print(precision_recall_fscore_support(ann1, ann2, labels=['none', 'isolation', 'support', 'both']))
-    print(accuracy_score(ann1, ann2))
-    iaa = cohen_kappa_score(ann1, ann2)
-    print(iaa)'''
+    # Evaluating IAA for two annotation.
+    class_annotation_df = load_docs.convert_entity_to_document_category(annotated_data)
+    all_data = load_docs.get_annotations('./Psych_notes/isolation_notes_mohit/',
+                                  './Psych_notes/mohit_annotation.csv')
+    load_docs.get_counts(all_data)
+    class_annotation_df1 = load_docs.convert_entity_to_document_category(all_data)
+    load_docs.get_entities_info(all_data)
+    load_docs.calculate_kappa(class_annotation_df, class_annotation_df1)
 
 
 if __name__ == '__main__':

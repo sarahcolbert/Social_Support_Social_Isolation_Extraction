@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""This code performs all the functions required for running LLM model.
+1. Reading questions from CSV file from each individual fine-grained categories.
+2. Formatting queries for training/testing LLM.
+3. Dividing large sentences into smaller ones.
+4. Getting answers for each sentence from tuned model. """
+
+
 import pandas as pd
 from nltk import sent_tokenize
 
@@ -17,6 +25,11 @@ class LLM_Utility:
         return dict(zip(temp['Category'], temp['Question']))
 
     def format_query(self, sent, category):
+        """
+        :param sent: (str) a single sentence
+        :param category: (str) fine-grained category name
+        :return templated_query: (str) formatted query for classification using LLM
+        """
         context = 'Context: The Clinician wrote: "' + sent + '"'
         question = 'Question: In the Clinician\'s opinion, "' + self.questions[category].lower() + '"'
         choices = 'Choices: yes; no; not relevant'
@@ -25,6 +38,11 @@ class LLM_Utility:
         return templated_query
 
     def divide_sentences(self, tokens, t_length):
+        """
+        :param tokens: (list) keywords in a text
+        :param t_length: (int) number of tokens
+        :return sents: (list) list of sentences after spliting
+        """
         sents = []
         try:
             for i in range(0, t_length, self.token_length):
@@ -37,6 +55,12 @@ class LLM_Utility:
         return sents
 
     def get_answer(self, template, tokenizer, model):
+        """
+        :param template: (str) formatted query for classification using LLM
+        :param tokenizer: (T5Tokenizer) tokenizer for FLAN
+        :param model: (T5ForConditionalGeneration) model for FLAN
+        :return result: (str) yes/no/not relevant
+        """
         input_ids = tokenizer(template, return_tensors="pt").input_ids
         outputs = model.generate(input_ids)
         predicted_ans = tokenizer.decode(outputs[0]).strip()
@@ -53,8 +77,11 @@ class LLM_Utility:
         return result
 
     def preprocess_sentences(self, sent):
-        ''' Spliting sentences using nltk and double space.
-        '''
+        """
+        Splits sentences using nltk and double space.
+        :param sent: (str)a sentence
+        :return: sents: (list) list of splited sentences
+        """
         sents = []
         sent_text = sent_tokenize(sent)  # this gives us a list of sentences
         # now loop over each sentence and tokenize it separately
@@ -67,10 +94,17 @@ class LLM_Utility:
         return sents
 
     def find_category(self, list_sent, category, tokenizer, model):
+        """
+        :param list_sent: (list) list of sentences for classification
+        :param category: (str) fine-grained category name
+        :param tokenizer: (T5Tokenizer) tokenizer for FLAN
+        :param model: (T5ForConditionalGeneration) model for FLAN
+        :return answers: (list) answers for all the sentences in list_sent
+        """
         answers = []
-        for long_sent in list_sent:
+        for long_sentence in list_sent:
             sents = []
-            for long_sent in self.preprocess_sentences(long_sent):
+            for long_sent in self.preprocess_sentences(long_sentence):
                 try:
                     long_sent = long_sent.strip()
                     tokens = long_sent.split()

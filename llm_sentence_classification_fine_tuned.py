@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""This code performs classification of sentences based on fine_tuned models. """
+
 import os
 os.environ["HF_ENDPOINT"] = "https://huggingface.co"
 import pandas as pd
@@ -16,6 +19,11 @@ class LLMSentenceClassification:
         self.model = None
 
     def load_model(self, category):
+        """
+        Loading models for different fine-grained categories.
+        :param category: (str) fine-grained category name
+        :return model: (T5ForConditionalGeneration) model for FLAN with ia3 adapter
+        """
         if category == 'social_isolation_loneliness':
             self.model = T5ForConditionalGeneration.from_pretrained("tuned_model/si_l/flan-t5-xl")
         elif category == 'social_isolation_no_social_network':
@@ -41,8 +49,7 @@ class LLMSentenceClassification:
         self.model.set_active_adapters("ia3_adapter")
 
     def process(self):
-        # loading datasets
-        # load dataset
+        # load datasets from BRAT annotation
         annotated_data = self.load_docs.get_annotations(
             './Psych_notes/annotation_sisu_psych_notes_final/support_notes/',
             './Psych_notes/annotation_sisu_psych_notes_final/social_support_files.csv')
@@ -50,23 +57,11 @@ class LLMSentenceClassification:
             './Psych_notes/annotation_sisu_psych_notes_final/isolation_notes/',
             './Psych_notes/annotation_sisu_psych_notes_final/social_isolation_files.csv'))
         print('Total number of annotated files: ', len(annotated_data))
-        # annotation_categories_df = self.load_docs.convert_entity_to_document_category(annotated_data)
         sentence_categories_df = self.load_docs.convert_entity_to_sentence_category(annotated_data)
-        # for now filtering data for quick turnout.
-        cols = self.load_docs.entity_categories
-        sentence_categories_df['counts'] = sentence_categories_df[cols].sum(axis=1)
-        index1 = sentence_categories_df.index[sentence_categories_df['counts'] >= 1]
-        temp = sentence_categories_df[sentence_categories_df['counts'] == 0]
-        temp = temp.sample(n=3000)
-        sentence_categories_df = sentence_categories_df.iloc[index1.union(temp.index)]
-        print('Intermediate shape: ', sentence_categories_df.shape)
-        # dropping the counts column
-        sentence_categories_df = sentence_categories_df.drop('counts', axis=1)
-        print('Total number of sentences for testing: ', sentence_categories_df.shape)
-
         pred_annotation = sentence_categories_df.copy()
         print(pred_annotation.shape)
         for category in self.load_docs.su_classes + self.load_docs.si_classes:
+            # not classifying emotional categories for now
             if category == 'social_isolation_no_emotional_support' \
                     or category == 'social_support_emotional_support':
                 print('Skipping {} category'.format(category))
