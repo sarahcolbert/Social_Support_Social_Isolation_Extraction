@@ -20,16 +20,7 @@ We will update the GPU version of the LLM code soon.
 
 Please cite the following paper if you find this code useful.
 
-@misc{patra2024extracting,
-      title={Extracting Social Support and Social Isolation Information from Clinical Psychiatry Notes: Comparing a Rule-based NLP System and a Large Language Model}, 
-      author={Braja Gopal Patra and Lauren A. Lepow and Praneet Kasi Reddy Jagadeesh Kumar and Veer Vekaria and Mohit Manoj Sharma and Prakash Adekkanattu and Brian Fennessy and Gavin Hynes and Isotta Landi and Jorge A. Sanchez-Ruiz and Euijung Ryu and Joanna M. Biernacka and Girish N. Nadkarni and Ardesheer Talati and Myrna Weissman and Mark Olfson and J. John Mann and Alexander W. Charney and Jyotishman Pathak},
-      year={2024},
-      eprint={2403.17199},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
-}
-
-Details will be provided soon. [link](https://github.com/brajagopalcse/SISU)
+_Patra, B. G., Lepow, L. A., Kumar, P. K. R. J., Vekaria, V., Sharma, M. M., Adekkanattu, P., Fennessy, B., Hynes, G., Landi, I., Sanchez-Ruiz, J. A., Ryu, E., Biernacka, J. M., Nadkarni, G. M., Talati, A., Weissman, M., Olfson, M., Mann, J. J., Charney, A. W., & Pathak, J. (2024). Extracting Social Support and Social Isolation Information from Clinical Psychiatry Notes: Comparing a Rule-based NLP System and a Large Language Model. [arXiv preprint arXiv:2403.17199](https://github.com/brajagopalcse/SISU))_
 
 Please contact brajagopal[dot]cse[at]gmail[dot]com for further information. 
 
