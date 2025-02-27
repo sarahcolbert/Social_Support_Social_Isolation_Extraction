@@ -13,7 +13,7 @@ from sklearn.metrics import cohen_kappa_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from brat_parser import get_entities_relations_attributes_groups
+from pymedextcore.brat_parser import get_entities_relations_attributes_groups
 
 
 class LoadDocuments:
