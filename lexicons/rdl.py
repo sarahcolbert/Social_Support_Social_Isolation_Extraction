@@ -1,6 +1,3 @@
-from configuration_file import Configuration
-
-
 class LoadLexicons:
     def __init__(self):
         # path to social isolation lexicons
